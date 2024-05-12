@@ -61,11 +61,20 @@ async function run() {
             const result = await foodCollection.findOne(query)
             res.send(result)
         })
+
         // get a user added food by email
         app.get('/my-foods/:email', async (req, res) => {
             const email = req.params.email;
-            const query = { userEmail : email }
+            const query = { userEmail: email }
             const result = await foodCollection.find(query).toArray()
+            res.send(result)
+        })
+        
+        // delete a single food by id
+        app.delete('/my-foods/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await foodCollection.deleteOne(query)
             res.send(result)
         })
 
