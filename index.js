@@ -69,12 +69,43 @@ async function run() {
             const result = await foodCollection.find(query).toArray()
             res.send(result)
         })
-        
+
         // delete a single food by id
         app.delete('/my-foods/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await foodCollection.deleteOne(query)
+            res.send(result)
+        })
+        // update route for a single food by id
+        app.get('/update/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await foodCollection.findOne(query)
+            res.send(result)
+        })
+
+        // update a single food by id
+        app.patch('/update/:id', async (req, res) => {
+            const id = req.params.id;
+            const options = { upsert: true };
+            const query = { _id: new ObjectId(id) };
+            const updatedFood = req.body;
+            const newFood = {
+                $set: {
+                    food_name: updatedFood.food_name,
+                     category : updatedFood.category,
+                     image : updatedFood.food_photo,
+                     price : updatedFood.price,
+                     quantity : updatedFood.quantity,
+                     origin : updatedFood.origin,
+                     userName : updatedFood.username,
+                     userEmail : updatedFood.email,
+                     description : updatedFood.description,
+
+                }
+            }
+            const result = await foodCollection.updateOne(query, newFood, options);
             res.send(result)
         })
 
