@@ -61,6 +61,13 @@ async function run() {
             const result = await foodCollection.findOne(query)
             res.send(result)
         })
+        // get a user added food by email
+        app.get('/my-foods/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { userEmail : email }
+            const result = await foodCollection.find(query).toArray()
+            res.send(result)
+        })
 
         // post a single purchase food to db
         app.post('/purchases', async (req, res) => {
