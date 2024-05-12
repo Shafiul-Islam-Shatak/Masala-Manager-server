@@ -34,6 +34,7 @@ async function run() {
 
         const foodCollection = client.db("foodDB").collection('food')
         const purchaseCollection = client.db("foodDB").collection('purchase_food')
+        const feedbackCollection = client.db("foodDB").collection('feedback')
         // post a food to db
         app.post('/all-foods', async (req, res) => {
             const newFood = req.body;
@@ -45,7 +46,7 @@ async function run() {
             const result = await foodCollection.find().toArray();
             res.send(result)
         })
-        
+
         // get a single food by id
         app.get('/food/:id', async (req, res) => {
             const id = req.params.id;
@@ -67,12 +68,23 @@ async function run() {
             const result = await purchaseCollection.insertOne(newPurchase)
             res.send(result)
         })
-         // get all purchase foods api from db
-         app.get('/purchases', async (req, res) => {
+        // get all purchase foods api from db
+        app.get('/purchases', async (req, res) => {
             const result = await purchaseCollection.find().toArray();
             res.send(result)
         })
 
+        // post a feedback to db
+        app.post('/feedbacks', async (req, res) => {
+            const newFeedBack = req.body;
+            const result = await feedbackCollection.insertOne(newFeedBack)
+            res.send(result)
+        })
+        // get all feedback api from db
+        app.get('/feedbacks', async (req, res) => {
+            const result = await feedbackCollection.find().toArray();
+            res.send(result)
+        })
 
 
         await client.db("admin").command({ ping: 1 });
