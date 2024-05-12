@@ -86,7 +86,7 @@ async function run() {
         })
 
         // update a single food by id
-        app.patch('/update/:id', async (req, res) => {
+        app.put('/update/:id', async (req, res) => {
             const id = req.params.id;
             const options = { upsert: true };
             const query = { _id: new ObjectId(id) };
@@ -95,12 +95,12 @@ async function run() {
                 $set: {
                     food_name: updatedFood.food_name,
                      category : updatedFood.category,
-                     image : updatedFood.food_photo,
+                     image : updatedFood.image,
                      price : updatedFood.price,
                      quantity : updatedFood.quantity,
                      origin : updatedFood.origin,
-                     userName : updatedFood.username,
-                     userEmail : updatedFood.email,
+                     userName : updatedFood.userName,
+                     userEmail : updatedFood.userEmail,
                      description : updatedFood.description,
 
                 }
