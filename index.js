@@ -94,14 +94,14 @@ async function run() {
             const newFood = {
                 $set: {
                     food_name: updatedFood.food_name,
-                     category : updatedFood.category,
-                     image : updatedFood.image,
-                     price : updatedFood.price,
-                     quantity : updatedFood.quantity,
-                     origin : updatedFood.origin,
-                     userName : updatedFood.userName,
-                     userEmail : updatedFood.userEmail,
-                     description : updatedFood.description,
+                    category: updatedFood.category,
+                    image: updatedFood.image,
+                    price: updatedFood.price,
+                    quantity: updatedFood.quantity,
+                    origin: updatedFood.origin,
+                    userName: updatedFood.userName,
+                    userEmail: updatedFood.userEmail,
+                    description: updatedFood.description,
 
                 }
             }
@@ -118,6 +118,20 @@ async function run() {
         // get all purchase foods api from db
         app.get('/purchases', async (req, res) => {
             const result = await purchaseCollection.find().toArray();
+            res.send(result)
+        })
+        // get user all purchase foods api from db
+        app.get('/my-purchases/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { buyer_email: email }
+            const result = await purchaseCollection.find(query).toArray();
+            res.send(result)
+        })
+        // delete a my purchse food by id
+        app.delete('/my-purchases/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await purchaseCollection.deleteOne(query)
             res.send(result)
         })
 
