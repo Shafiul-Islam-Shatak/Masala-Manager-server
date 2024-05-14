@@ -48,6 +48,11 @@ async function run() {
             const result = await foodCollection.find().toArray();
             res.send(result)
         })
+        // get top selling foods api from db by shorting
+        app.get('/top-foods', async (req, res) => {
+            const result = await foodCollection.find().sort({ sale_quantity: -1 }).toArray();
+            res.send(result)
+        })
 
         // get a single food by id
         app.get('/food/:id', async (req, res) => {
@@ -115,8 +120,6 @@ async function run() {
         app.post('/purchases', async (req, res) => {
             const newPurchase = req.body;
             const result = await purchaseCollection.insertOne(newPurchase)
-            // console.log('mmmmmm');
-            console.log('jjjj',newPurchase._id);
             const quantityUpdate = await foodCollection.updateOne(
                 
                 {
