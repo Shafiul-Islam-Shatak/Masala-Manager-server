@@ -121,17 +121,20 @@ async function run() {
             const newPurchase = req.body;
             const result = await purchaseCollection.insertOne(newPurchase)
             const quantityUpdate = await foodCollection.updateOne(
-                
+
                 {
-                    food_name : newPurchase.purchase_iteam
+                    food_name: newPurchase.purchase_iteam
                 },
                 {
-                    $inc: { sale_quantity: 1, stock_quantity: -1 }
+                    $inc: {
+                        sale_quantity: newPurchase.order_quantity,
+                        stock_quantity: -newPurchase.order_quantity
+                    }
                 }
             )
-            res.send({result, quantityUpdate})
+            res.send({ result, quantityUpdate })
         })
-        
+
 
 
         // update sale quantity while purchase
