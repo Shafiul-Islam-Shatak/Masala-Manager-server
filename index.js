@@ -115,10 +115,24 @@ async function run() {
         app.post('/purchases', async (req, res) => {
             const newPurchase = req.body;
             const result = await purchaseCollection.insertOne(newPurchase)
-            res.send(result)
+            // console.log('mmmmmm');
+            console.log('jjjj',newPurchase._id);
+            const quantityUpdate = await foodCollection.updateOne(
+                
+                {
+                    food_name : newPurchase.purchase_iteam
+                },
+                {
+                    $inc: { sale_quantity: 1, stock_quantity: -1 }
+                }
+            )
+            res.send({result, quantityUpdate})
         })
-        // get all purchase foods api from db
-        app.get('/purchases', async (req, res) => {
+        
+
+
+        // update sale quantity while purchase
+        app.patch('/purchases', async (req, res) => {
             const result = await purchaseCollection.find().toArray();
             res.send(result)
         })
@@ -163,12 +177,12 @@ async function run() {
         })
 
         // clear jwt token
-        app.get('/logout', (req, res)=>{
+        app.get('/logout', (req, res) => {
             res.clearCookie('token', {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-                maxAge : 0
+                maxAge: 0
             }).send({ success: true })
         })
 
