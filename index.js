@@ -45,7 +45,11 @@ async function run() {
         })
         // get all foods api from db
         app.get('/all-foods', async (req, res) => {
-            const result = await foodCollection.find().toArray();
+            const search = req.query.search;
+            let query ={
+                food_name :{$regex : search , $options : 'i'}
+            }
+            const result = await foodCollection.find(query).toArray();
             res.send(result)
         })
         // get top selling foods api from db by shorting
