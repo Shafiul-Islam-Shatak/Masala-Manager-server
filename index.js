@@ -8,15 +8,22 @@ const port = process.env.PORT || 5000;
 
 const app = express()
 
-const corsoptions = {
-    origin: ['http://localhost:5173'],
-    credentials: true,
-    optionSuccessStatus: 2000
-}
+//Must remove "/" from your production URL
+app.use(
+    cors({
+      origin: [
+        "http://localhost:5173",
+        "https://masala-manager.web.app",
+        "https://masala-manager.firebaseapp.com",
+      ],
+      credentials: true,
+    })
+  );
 
 // middleware
-app.use(cors(corsoptions));
+// app.use(cors(corsoptions));
 app.use(express.json());
+app.use(cookieParser());
 
 
 
@@ -37,10 +44,17 @@ async function run() {
         const foodCollection = client.db("foodDB").collection('food')
         const purchaseCollection = client.db("foodDB").collection('purchase_food')
         const feedbackCollection = client.db("foodDB").collection('feedback')
+        const usersCollection = client.db("foodDB").collection('users')
         // post a food to db
         app.post('/all-foods', async (req, res) => {
             const newFood = req.body;
             const result = await foodCollection.insertOne(newFood);
+            res.send(result)
+        })
+        // post user while reg
+        app.post('/regUser', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
             res.send(result)
         })
         // get all foods api from db
@@ -176,6 +190,8 @@ async function run() {
         // jwt generate
         app.post('/jwt', async (req, res) => {
             const user = req.body;
+            // const newUser = await usersCollection.insertOne(user);
+            // res.send(newUser)
             const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: '365d'
             })
